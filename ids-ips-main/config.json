@@ -1,0 +1,36 @@
+{
+    "admin_telegram_id": "853714650",
+    "bot_token": "8356579881:AAHMiBSmT4orcRZh3Cr09JKDaPmzzmzOowE",
+    "allowed_ports": [22, 80, 443],
+    "log_paths": [
+        "/var/log/nginx/access.log",
+        "/var/log/apache2/access.log"
+    ],
+    "whitelist_ips": ["127.0.0.1"],
+    "block_threshold": 3,
+    "scan_rules": {
+        "sql_injection": [
+            "UNION SELECT", "DROP TABLE", "INSERT INTO", "OR 1=1",
+            "' OR '", "xp_cmdshell", "EXEC(", "CAST(", "CONVERT(",
+            "SELECT.*FROM", "benchmark(", "sleep(", "waitfor delay"
+        ],
+        "xss": [
+            "<script>", "</script>", "javascript:", "onerror=",
+            "onload=", "eval(", "alert(", "document.cookie",
+            "<img src=", "src=javascript", "&#x3C;script"
+        ],
+        "directory_traversal": [
+            "../", "..\\", "%2e%2e%2f", "%2e%2e/", "..%2f",
+            "%252e%252e", "....//", "..;/"
+        ],
+        "scanner_user_agents": [
+            "nmap", "nikto", "sqlmap", "masscan", "zgrab",
+            "nuclei", "dirbuster", "gobuster", "hydra", "metasploit",
+            "python-requests/2", "curl/", "wget/"
+        ],
+        "rce_attempts": [
+            ";ls", ";id", ";whoami", "|id", "|whoami", "`id`",
+            "$(id)", "/etc/passwd", "/etc/shadow", "cmd.exe"
+        ]
+    }
+}
