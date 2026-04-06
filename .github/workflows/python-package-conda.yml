@@ -1,0 +1,46 @@
+name: Python Package CI with Conda
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.10]  # keyingi paytlarda boshqa versiyalar qo'shish mumkin
+        max-parallel: 1
+
+    steps:
+    # 1️⃣ Kodni olish
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2️⃣ Miniconda o'rnatish
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        auto-activate-base: false
+
+    # 3️⃣ Conda muhitini yaratish
+    - name: Create Conda environment
+      run: |
+        conda env create --file environment.yml --name myenv
+        conda info --envs
+
+    # 4️⃣ Lint jarayoni
+    - name: Lint with flake8
+      run: |
+        conda activate myenv
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    # 5️⃣ Test jarayoni
+    - name: Run tests with pytest
+      run: |
+        conda activate myenv
+        pytest
